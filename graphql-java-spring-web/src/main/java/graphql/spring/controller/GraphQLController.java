@@ -1,6 +1,8 @@
-package graphql;
+package graphql.spring.controller;
 
 
+import graphql.ExecutionInput;
+import graphql.GraphQL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,7 +14,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @RestController
-public class GraphQLResource {
+public class GraphQLController {
 
     @Autowired
     private GraphQL graphql;
