@@ -20,7 +20,7 @@ public class GraphQLController {
     private GraphQL graphql;
 
 
-    @RequestMapping(value = "/graphql", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "${graphql.url:graphql}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, Object> graphql(@RequestBody Map<String, Object> body) {
         String query = (String) body.get("query");
         if (query == null) {
