@@ -1,15 +1,3 @@
-plugins {
-    id 'java'
-}
-
-group 'com.graphql-java'
-version '1.0-SNAPSHOT'
-
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-}
 
 dependencies {
     compile "org.springframework:spring-web:5.1.2.RELEASE"
