@@ -1,0 +1,3 @@
+rootProject.name = 'graphql-java-spring'
+include 'graphql-java-spring-boot-starter', 'graphql-java-spring-web'
+
