@@ -1,3 +1,4 @@
+# THIS IS STILL WIP AND NOT RELEASED YET
 # GraphQL Java Spring
 
 
@@ -9,10 +10,18 @@ While the GraphQL Specification itself doesn't specify any transport protocol th
 Goals / Design:
 
 - Just HTTP JSON: the current focus is on HTTP execution via JSON.
-- Minimal Dependencies: the only dependencies are GraphQL Java and Spring projects.
+- Minimal Dependencies: the only dependencies are GraphQL Java and Spring projects (including Jackson for JSON handling).
 - No additional abstraction layer on top of GraphQL Java: GraphQL Java is meant to be used directly. 
 
 
+## Supported HTTP Requests
+
+As outlined in https://graphql.org/learn/serving-over-http this project supports:
+
+1. GET request with `query`, `operationName` and `variables` parameters. The variable parameters are json encoded
+2. POST request with body `application/json` and keys `query` (string), `operationName` (string) and `variables` (map).
+
+Both produce `application/json`.
 
 ## Spring Boot Starter
 
@@ -39,3 +48,9 @@ or to your `pom.xml`
 </dependency>
 
 ```
+
+## Spring Web Artifact
+
+We also provide a artifact for non Boot Application. 
+
+
