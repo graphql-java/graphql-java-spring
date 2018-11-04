@@ -1,7 +1,7 @@
 # GraphQL Java Spring
 
 
-This project integrates GraphQL Java into Spring/Spring Boot, by enabling query execution via HTTP.
+This project integrates [GraphQL Java](https://github.com/graphql-java/graphql-java) into Spring/Spring Boot, by enabling query execution via HTTP.
 
 While the GraphQL Specification itself doesn't specify any transport protocol there is a quasi standard how to do it described 
 [here](https://graphql.org/learn/serving-over-http/) and this project follows this quasi standard.
