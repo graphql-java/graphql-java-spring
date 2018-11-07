@@ -5,5 +5,5 @@ def springBootVersion = "2.1.0.RELEASE"
 
 dependencies {
     compile "org.springframework.boot:spring-boot-autoconfigure:$springBootVersion"
-    compile project(':graphql-java-spring-web')
+    compile project(':graphql-java-spring-webflux')
 }

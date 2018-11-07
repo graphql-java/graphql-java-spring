@@ -1,4 +1,4 @@
-package graphql.spring.controller;
+package graphql.spring.reactive.controller;
 
 import graphql.Internal;
 

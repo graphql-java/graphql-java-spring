@@ -1,9 +1,10 @@
 def springVersion = "5.1.2.RELEASE"
 def jacksonVersion = "2.9.6"
-def graphqlJavaVersion = "11.0"
+//def graphqlJavaVersion = "11.0"
+def graphqlJavaVersion = "2018-09-16T01-27-46-27a6e44"
 
 dependencies {
-    compile "org.springframework:spring-webmvc:$springVersion"
+    compile "org.springframework:spring-webflux:$springVersion"
     compile "org.springframework:spring-context:$springVersion"
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     compile "com.graphql-java:graphql-java:$graphqlJavaVersion"

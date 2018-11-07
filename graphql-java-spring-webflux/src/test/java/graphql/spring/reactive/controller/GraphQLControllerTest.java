@@ -1,4 +1,4 @@
-package graphql.spring.controller;
+package graphql.spring.reactive.controller;
 
 import org.junit.Before;
 import org.junit.Test;

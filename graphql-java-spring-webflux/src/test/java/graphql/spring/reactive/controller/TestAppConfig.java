@@ -1,4 +1,4 @@
-package graphql.spring.controller;
+package graphql.spring.reactive.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import graphql.ExecutionInput;

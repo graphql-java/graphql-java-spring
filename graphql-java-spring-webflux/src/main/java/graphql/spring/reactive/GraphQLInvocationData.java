@@ -1,4 +1,4 @@
-package graphql.spring.controller;
+package graphql.spring.reactive;
 
 import graphql.Assert;
 import graphql.PublicApi;

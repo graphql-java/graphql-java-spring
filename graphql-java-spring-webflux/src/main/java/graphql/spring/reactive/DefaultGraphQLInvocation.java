@@ -1,4 +1,4 @@
-package graphql.spring.controller;
+package graphql.spring.reactive;
 
 import graphql.ExecutionInput;
 import graphql.ExecutionResult;
@@ -7,9 +7,7 @@ import graphql.Internal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.WebRequest;
-
-import java.util.Map;
-import java.util.concurrent.CompletableFuture;
+import reactor.core.publisher.Mono;
 
 @Component
 @Internal
@@ -19,13 +17,13 @@ public class DefaultGraphQLInvocation implements GraphQLInvocation {
     private GraphQL graphQL;
 
     @Override
-    public CompletableFuture<Map<String, Object>> invoke(GraphQLInvocationData invocationData, WebRequest webRequest) {
+    public Mono<ExecutionResult> invoke(GraphQLInvocationData invocationData, WebRequest webRequest) {
         ExecutionInput executionInput = ExecutionInput.newExecutionInput()
                 .query(invocationData.getQuery())
                 .operationName(invocationData.getOperationName())
                 .variables(invocationData.getVariables())
                 .build();
-        return graphQL.executeAsync(executionInput).thenApply(ExecutionResult::toSpecification);
+        return Mono.fromCompletionStage(graphQL.executeAsync(executionInput));
     }
 
 }
