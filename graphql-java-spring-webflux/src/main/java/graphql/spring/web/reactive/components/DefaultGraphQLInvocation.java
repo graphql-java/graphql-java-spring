@@ -1,9 +1,11 @@
-package graphql.spring.web.reactive;
+package graphql.spring.web.reactive.components;
 
 import graphql.ExecutionInput;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
 import graphql.Internal;
+import graphql.spring.web.reactive.GraphQLInvocation;
+import graphql.spring.web.reactive.GraphQLInvocationData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.WebRequest;

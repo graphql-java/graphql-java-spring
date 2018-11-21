@@ -1,4 +1,4 @@
-package graphql.spring.web.reactive.controller;
+package graphql.spring.web.reactive.components;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,13 +39,12 @@ public class GraphQLController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Object graphqlPOST(@RequestBody GraphQLRequestBody body,
-                              WebRequest webRequest,
                               ServerHttpResponse serverHttpResponse) {
         String query = body.getQuery();
         if (query == null) {
             query = "";
         }
-        Mono<ExecutionResult> executionResult = graphQLInvocation.invoke(new GraphQLInvocationData(query, body.getOperationName(), body.getVariables()), webRequest);
+        Mono<ExecutionResult> executionResult = graphQLInvocation.invoke(new GraphQLInvocationData(query, body.getOperationName(), body.getVariables()), null);
         return executionResultHandler.handleExecutionResult(executionResult, serverHttpResponse);
     }
 
