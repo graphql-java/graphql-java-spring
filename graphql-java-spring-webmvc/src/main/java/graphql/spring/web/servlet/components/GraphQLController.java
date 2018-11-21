@@ -1,4 +1,4 @@
-package graphql.spring.web.servlet.controller;
+package graphql.spring.web.servlet.components;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,7 +9,6 @@ import graphql.spring.web.servlet.GraphQLInvocation;
 import graphql.spring.web.servlet.GraphQLInvocationData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,29 +36,27 @@ public class GraphQLController {
     @RequestMapping(value = "${graphql.url:graphql}",
             method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Object graphqlPOST(@RequestBody GraphQLRequestBody body,
-                              WebRequest webRequest,
-                              ServerHttpResponse serverHttpResponse) {
+                              WebRequest webRequest) {
         String query = body.getQuery();
         if (query == null) {
             query = "";
         }
         CompletableFuture<ExecutionResult> executionResult = graphQLInvocation.invoke(new GraphQLInvocationData(query, body.getOperationName(), body.getVariables()), webRequest);
-        return executionResultHandler.handleExecutionResult(executionResult, serverHttpResponse);
+        return executionResultHandler.handleExecutionResult(executionResult);
     }
 
     @RequestMapping(value = "${graphql.url:graphql}",
             method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public Object graphqlGET(
             @RequestParam("query") String query,
             @RequestParam(value = "operationName", required = false) String operationName,
             @RequestParam(value = "variables", required = false) String variablesJson,
-            WebRequest webRequest,
-            ServerHttpResponse serverHttpResponse) {
+            WebRequest webRequest) {
         CompletableFuture<ExecutionResult> executionResult = graphQLInvocation.invoke(new GraphQLInvocationData(query, operationName, convertVariablesJson(variablesJson)), webRequest);
-        return executionResultHandler.handleExecutionResult(executionResult, serverHttpResponse);
+        return executionResultHandler.handleExecutionResult(executionResult);
     }
 
     private Map<String, Object> convertVariablesJson(String jsonMap) {

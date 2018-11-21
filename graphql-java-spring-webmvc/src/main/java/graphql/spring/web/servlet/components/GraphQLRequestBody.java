@@ -1,4 +1,4 @@
-package graphql.spring.web.servlet.controller;
+package graphql.spring.web.servlet.components;
 
 import graphql.Internal;
 
