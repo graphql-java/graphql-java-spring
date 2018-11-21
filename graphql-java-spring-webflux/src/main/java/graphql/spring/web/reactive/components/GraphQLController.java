@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.WebRequest;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
@@ -55,9 +54,8 @@ public class GraphQLController {
             @RequestParam("query") String query,
             @RequestParam(value = "operationName", required = false) String operationName,
             @RequestParam(value = "variables", required = false) String variablesJson,
-            WebRequest webRequest,
             ServerHttpResponse serverHttpResponse) {
-        Mono<ExecutionResult> executionResult = graphQLInvocation.invoke(new GraphQLInvocationData(query, operationName, convertVariablesJson(variablesJson)), webRequest);
+        Mono<ExecutionResult> executionResult = graphQLInvocation.invoke(new GraphQLInvocationData(query, operationName, convertVariablesJson(variablesJson)), null);
         return executionResultHandler.handleExecutionResult(executionResult, serverHttpResponse);
     }
 

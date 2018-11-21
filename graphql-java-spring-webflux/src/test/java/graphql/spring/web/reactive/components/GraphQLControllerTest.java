@@ -12,6 +12,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import java.net.URLEncoder;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -34,7 +35,7 @@ public class GraphQLControllerTest {
 
 
     @Test
-    public void testVariableJson() throws Exception {
+    public void testPostRequest() throws Exception {
         Map<String, Object> request = new LinkedHashMap<>();
         client.post().uri("/graphql")
                 .body(Mono.just(request), Map.class)
@@ -53,4 +54,20 @@ public class GraphQLControllerTest {
 
     }
 
+    @Test
+    public void testGetRequestWithVariables() throws Exception {
+        String variablesJson = "{\"key\":\"value\"}";
+        String variablesValue = URLEncoder.encode(variablesJson, "UTF-8");
+        String queryString = URLEncoder.encode("{foo}", "UTF-8");
+        client.get().uri(uriBuilder -> uriBuilder.path("/graphql")
+                .queryParam("variables", variablesValue)
+                .queryParam("query", queryString)
+                .build(variablesJson, queryString))
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("data", is("foo"));
+
+    }
 }
