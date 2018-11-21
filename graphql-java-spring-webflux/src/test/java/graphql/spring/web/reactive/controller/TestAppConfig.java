@@ -1,4 +1,4 @@
-package graphql.spring.reactive.controller;
+package graphql.spring.web.reactive.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import graphql.ExecutionInput;
@@ -9,12 +9,12 @@ import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.reactive.config.EnableWebFlux;
 
 import java.util.concurrent.CompletableFuture;
 
 @Configuration
-@EnableWebMvc
+@EnableWebFlux
 @ComponentScan(basePackageClasses = GraphQLController.class)
 public class TestAppConfig {
 

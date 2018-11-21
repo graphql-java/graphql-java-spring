@@ -1,4 +1,4 @@
-package graphql.spring.reactive;
+package graphql.spring.web.reactive;
 
 import graphql.ExecutionResult;
 import graphql.PublicSpi;

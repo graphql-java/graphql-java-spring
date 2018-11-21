@@ -1,25 +1,25 @@
-package graphql.spring.reactive.controller;
+package graphql.spring.web.servlet.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import graphql.ExecutionResult;
 import graphql.Internal;
-import graphql.spring.reactive.ExecutionResultHandler;
-import graphql.spring.reactive.GraphQLInvocation;
-import graphql.spring.reactive.GraphQLInvocationData;
+import graphql.spring.web.servlet.ExecutionResultHandler;
+import graphql.spring.web.servlet.GraphQLInvocation;
+import graphql.spring.web.servlet.GraphQLInvocationData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
-import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @Internal
@@ -45,7 +45,7 @@ public class GraphQLController {
         if (query == null) {
             query = "";
         }
-        Mono<ExecutionResult> executionResult = graphQLInvocation.invoke(new GraphQLInvocationData(query, body.getOperationName(), body.getVariables()), webRequest);
+        CompletableFuture<ExecutionResult> executionResult = graphQLInvocation.invoke(new GraphQLInvocationData(query, body.getOperationName(), body.getVariables()), webRequest);
         return executionResultHandler.handleExecutionResult(executionResult, serverHttpResponse);
     }
 
@@ -58,7 +58,7 @@ public class GraphQLController {
             @RequestParam(value = "variables", required = false) String variablesJson,
             WebRequest webRequest,
             ServerHttpResponse serverHttpResponse) {
-        Mono<ExecutionResult> executionResult = graphQLInvocation.invoke(new GraphQLInvocationData(query, operationName, convertVariablesJson(variablesJson)), webRequest);
+        CompletableFuture<ExecutionResult> executionResult = graphQLInvocation.invoke(new GraphQLInvocationData(query, operationName, convertVariablesJson(variablesJson)), webRequest);
         return executionResultHandler.handleExecutionResult(executionResult, serverHttpResponse);
     }
 

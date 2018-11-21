@@ -1,6 +1,6 @@
-package graphql.spring;
+package graphql.spring.web.reactive;
 
-import graphql.spring.reactive.controller.GraphQLController;
+import graphql.spring.web.reactive.controller.GraphQLController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.ApplicationContext;

@@ -3,12 +3,13 @@ def jacksonVersion = "2.9.6"
 def graphqlJavaVersion = "11.0"
 
 dependencies {
-    compile "org.springframework:spring-webflux:$springVersion"
+    compile "org.springframework:spring-webmvc:$springVersion"
     compile "org.springframework:spring-context:$springVersion"
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     compile "com.graphql-java:graphql-java:$graphqlJavaVersion"
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile "org.springframework:spring-test:$springVersion"
+    testCompile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
     testCompile "org.mockito:mockito-core:2.+"
 }
