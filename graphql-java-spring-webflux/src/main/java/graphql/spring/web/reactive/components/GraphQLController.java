@@ -9,12 +9,12 @@ import graphql.spring.web.reactive.GraphQLInvocation;
 import graphql.spring.web.reactive.GraphQLInvocationData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
@@ -38,13 +38,13 @@ public class GraphQLController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public Object graphqlPOST(@RequestBody GraphQLRequestBody body,
-                              ServerHttpResponse serverHttpResponse) {
+                              ServerWebExchange serverWebExchange) {
         String query = body.getQuery();
         if (query == null) {
             query = "";
         }
-        Mono<ExecutionResult> executionResult = graphQLInvocation.invoke(new GraphQLInvocationData(query, body.getOperationName(), body.getVariables()), null);
-        return executionResultHandler.handleExecutionResult(executionResult, serverHttpResponse);
+        Mono<ExecutionResult> executionResult = graphQLInvocation.invoke(new GraphQLInvocationData(query, body.getOperationName(), body.getVariables()), serverWebExchange);
+        return executionResultHandler.handleExecutionResult(executionResult, serverWebExchange.getResponse());
     }
 
     @RequestMapping(value = "${graphql.url:graphql}",
@@ -54,9 +54,10 @@ public class GraphQLController {
             @RequestParam("query") String query,
             @RequestParam(value = "operationName", required = false) String operationName,
             @RequestParam(value = "variables", required = false) String variablesJson,
-            ServerHttpResponse serverHttpResponse) {
-        Mono<ExecutionResult> executionResult = graphQLInvocation.invoke(new GraphQLInvocationData(query, operationName, convertVariablesJson(variablesJson)), null);
-        return executionResultHandler.handleExecutionResult(executionResult, serverHttpResponse);
+            ServerWebExchange serverWebExchange
+    ) {
+        Mono<ExecutionResult> executionResult = graphQLInvocation.invoke(new GraphQLInvocationData(query, operationName, convertVariablesJson(variablesJson)), serverWebExchange);
+        return executionResultHandler.handleExecutionResult(executionResult, serverWebExchange.getResponse());
     }
 
     private Map<String, Object> convertVariablesJson(String jsonMap) {

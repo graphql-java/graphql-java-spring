@@ -8,7 +8,7 @@ import graphql.spring.web.reactive.GraphQLInvocation;
 import graphql.spring.web.reactive.GraphQLInvocationData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -19,7 +19,7 @@ public class DefaultGraphQLInvocation implements GraphQLInvocation {
     private GraphQL graphQL;
 
     @Override
-    public Mono<ExecutionResult> invoke(GraphQLInvocationData invocationData, WebRequest webRequest) {
+    public Mono<ExecutionResult> invoke(GraphQLInvocationData invocationData, ServerWebExchange serverWebExchange) {
         ExecutionInput executionInput = ExecutionInput.newExecutionInput()
                 .query(invocationData.getQuery())
                 .operationName(invocationData.getOperationName())
