@@ -68,7 +68,7 @@ public class GraphQLControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
-                .jsonPath("data", is("bar"));
+                .jsonPath("data").isEqualTo("bar");
 
         assertThat(captor.getAllValues().size(), is(1));
 
@@ -101,7 +101,7 @@ public class GraphQLControllerTest {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
-                .jsonPath("data", is("foo"));
+                .jsonPath("data").isEqualTo("bar");
 
         assertThat(captor.getAllValues().size(), is(1));
 
