@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -60,6 +61,7 @@ public class GraphQLController {
     }
 
     private Map<String, Object> convertVariablesJson(String jsonMap) {
+        if (jsonMap == null) return Collections.emptyMap();
         try {
             return objectMapper.readValue(jsonMap, Map.class);
         } catch (IOException e) {
