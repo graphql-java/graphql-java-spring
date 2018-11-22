@@ -111,4 +111,30 @@ public class GraphQLControllerTest {
         assertThat(captor.getValue().getVariables(), is(variables));
         assertThat(captor.getValue().getOperationName(), is(operationName));
     }
+
+    @Test
+    public void testSimpleGetRequest() throws Exception {
+        String query = "{foo}";
+        String queryString = URLEncoder.encode(query, "UTF-8");
+
+        ExecutionResultImpl executionResult = ExecutionResultImpl.newExecutionResult()
+                .data("bar")
+                .build();
+        CompletableFuture cf = CompletableFuture.completedFuture(executionResult);
+        ArgumentCaptor<ExecutionInput> captor = ArgumentCaptor.forClass(ExecutionInput.class);
+        Mockito.when(graphql.executeAsync(captor.capture())).thenReturn(cf);
+
+        client.get().uri(uriBuilder -> uriBuilder.path("/graphql")
+                .queryParam("query", queryString)
+                .build())
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("data").isEqualTo("bar");
+
+        assertThat(captor.getAllValues().size(), is(1));
+        assertThat(captor.getValue().getQuery(), is(query));
+    }
+
 }

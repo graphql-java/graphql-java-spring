@@ -18,6 +18,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Map;
 
 @RestController
@@ -61,6 +62,7 @@ public class GraphQLController {
     }
 
     private Map<String, Object> convertVariablesJson(String jsonMap) {
+        if (jsonMap == null) return Collections.emptyMap();
         try {
             return objectMapper.readValue(jsonMap, Map.class);
         } catch (IOException e) {
