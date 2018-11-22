@@ -23,7 +23,26 @@ As outlined in https://graphql.org/learn/serving-over-http this project supports
 
 Both produce `application/json`.
 
-## Spring Boot Starter
+## Support for webmvc and webflux
+
+We support both spring web types: the fully non-blocking `webflux` and the traditional servlet based `webmvc`.
+
+Please see [here](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#webflux-framework-choice) in 
+the spring documentation itself about the differences.
+
+
+## Artifacts
+
+There are four different artifacts:
+
+1. graphql-java-spring-webflux 
+2. graphql-java-spring-boot-starter-webflux
+3. graphql-java-spring-webmvc
+4. graphql-java-spring-boot-starter-webmvc 
+
+
+
+## Getting started with Spring Boot (webflux and webmvc)
 
 The Spring Boot Starter artifact provides a HTTP endpoint on ${graphql.url} with the default value "/graphql" just by being on the classpath.
 
@@ -31,26 +50,41 @@ The only requirement is to have a Bean of type `graphql.GraphQL` available.
 
 Add the following dependency to your `build.gradle` (make sure `mavenCentral()` is among your repos)
 
+for webflux:
 ```groovy
 dependencies {
-    implementation "com.graphql-java:graphql-java-spring-boot-starter:1.0"
+    implementation "com.graphql-java:graphql-java-spring-boot-starter-webflux:1.0"
 }
+```
 
+for webmvc:
+```groovy
+dependencies {
+    implementation "com.graphql-java:graphql-java-spring-boot-starter-webmvc:1.0"
+}
 ```
 
 or to your `pom.xml`
 
+for webflux
 ```xml
 <dependency>
     <groupId>com.graphql-java</groupId>
-    <artifactId>graphql-java-spring-boot-starter</artifactId>
+    <artifactId>graphql-java-spring-boot-starter-webflux</artifactId>
     <version>1.0</version>
 </dependency>
 
 ```
 
-## Spring Web Artifact
+for webmvc:
+```xml
+<dependency>
+    <groupId>com.graphql-java</groupId>
+    <artifactId>graphql-java-spring-boot-starter-webmvc</artifactId>
+    <version>1.0</version>
+</dependency>
 
-We also provide a artifact for non Boot Application. 
+```
+
 
 
