@@ -28,6 +28,7 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'maven'
     apply plugin: 'maven-publish'
+    apply plugin: 'groovy'
 
 
 
@@ -48,8 +49,6 @@ subprojects {
         mavenCentral()
         mavenLocal()
     }
-
-    apply plugin: 'groovy'
 
 
     task sourcesJar(type: Jar) {
@@ -89,7 +88,6 @@ subprojects {
                 pom.withXml {
                     asNode().children().last() + {
                         resolveStrategy = Closure.DELEGATE_FIRST
-                        description 'GraphQL Java Spring'
                         url "https://github.com/graphql-java/graphql-java-spring"
                         scm {
                             url "https://github.com/graphql-java/graphql-java-spring"
@@ -123,7 +121,7 @@ subprojects {
         publish = true
         pkg {
             repo = 'graphql-java'
-            name = 'graphql-java-spring'
+            name = projectName
             desc = 'GraphQL Java Spring integration'
             licenses = ['MIT']
             vcsUrl = 'https://github.com/graphql-java/graphql-java-spring'
