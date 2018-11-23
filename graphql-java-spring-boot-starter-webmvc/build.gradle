@@ -1,6 +1,3 @@
-version = "1.0"
-
-def springBootVersion = "2.1.0.RELEASE"
 
 dependencies {
     compile "org.springframework.boot:spring-boot-autoconfigure:$springBootVersion"

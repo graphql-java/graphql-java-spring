@@ -1,6 +1,5 @@
-def springVersion = "5.1.2.RELEASE"
-def jacksonVersion = "2.9.6"
-def graphqlJavaVersion = "11.0"
+
+
 
 dependencies {
     compile "org.springframework:spring-webmvc:$springVersion"
