@@ -121,8 +121,8 @@ subprojects {
         publish = true
         pkg {
             repo = 'graphql-java'
-            name = projectName
-            desc = 'GraphQL Java Spring integration'
+            name = project.name
+            desc = project.description
             licenses = ['MIT']
             vcsUrl = 'https://github.com/graphql-java/graphql-java-spring'
 
