@@ -78,6 +78,33 @@ public class GraphQLControllerTest {
     }
 
     @Test
+    public void testSimplePostRequest() throws Exception {
+        Map<String, Object> request = new LinkedHashMap<>();
+        String query = "{foo}";
+        request.put("query", query);
+
+        ExecutionResultImpl executionResult = ExecutionResultImpl.newExecutionResult()
+                .data("bar")
+                .build();
+        CompletableFuture cf = CompletableFuture.completedFuture(executionResult);
+        ArgumentCaptor<ExecutionInput> captor = ArgumentCaptor.forClass(ExecutionInput.class);
+        Mockito.when(graphql.executeAsync(captor.capture())).thenReturn(cf);
+
+        client.post().uri("/graphql")
+                .body(Mono.just(request), Map.class)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("data").isEqualTo("bar");
+
+        assertThat(captor.getAllValues().size(), is(1));
+
+        assertThat(captor.getValue().getQuery(), is(query));
+    }
+
+
+    @Test
     public void testGetRequest() throws Exception {
         String variablesJson = "{\"variable\":\"variableValue\"}";
         String variablesValue = URLEncoder.encode(variablesJson, "UTF-8");

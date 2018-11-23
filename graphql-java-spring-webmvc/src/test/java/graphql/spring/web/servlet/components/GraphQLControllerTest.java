@@ -105,6 +105,39 @@ public class GraphQLControllerTest {
     }
 
     @Test
+    public void testSimplePostRequest() throws Exception {
+        Map<String, Object> request = new LinkedHashMap<>();
+        String query = "{foo}";
+        request.put("query", query);
+
+        ExecutionResultImpl executionResult = ExecutionResultImpl.newExecutionResult()
+                .data("bar")
+                .build();
+        CompletableFuture cf = CompletableFuture.completedFuture(executionResult);
+        ArgumentCaptor<ExecutionInput> captor = ArgumentCaptor.forClass(ExecutionInput.class);
+        Mockito.when(graphql.executeAsync(captor.capture())).thenReturn(cf);
+
+
+        MvcResult mvcResult = this.mockMvc.perform(post("/graphql")
+                .content(toJson(request))
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(status().isOk())
+                .andExpect(request().asyncStarted())
+                .andReturn();
+
+        this.mockMvc.perform(asyncDispatch(mvcResult))
+                .andDo(print()).andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("data", is("bar")))
+                .andReturn();
+
+        assertThat(captor.getAllValues().size(), is(1));
+
+        assertThat(captor.getValue().getQuery(), is(query));
+
+    }
+
+    @Test
     public void testGetRequest() throws Exception {
         String variablesJson = "{\"variable\":\"variableValue\"}";
         String query = "query myQuery {foo}";
