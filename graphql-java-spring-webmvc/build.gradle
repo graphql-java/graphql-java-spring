@@ -1,4 +1,4 @@
-
+description = "GraphQL Java Spring Webmvc integration"
 
 dependencies {
     compile "org.springframework:spring-webmvc:$springVersion"

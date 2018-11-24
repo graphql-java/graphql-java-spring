@@ -1,4 +1,4 @@
-
+description = "GraphQL Java Spring Boot starter Webmvc"
 dependencies {
     compile "org.springframework.boot:spring-boot-autoconfigure:$springBootVersion"
     compile project(':graphql-java-spring-webmvc')

@@ -1,3 +1,5 @@
+description = "GraphQL Java Spring Webflux integration"
+
 dependencies {
     compile "org.springframework:spring-webflux:$springVersion"
     compile "org.springframework:spring-context:$springVersion"
