@@ -1,15 +1,17 @@
-package graphql.spring.web.servlet.components;
+package testconfig;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import graphql.GraphQL;
+import graphql.spring.web.reactive.components.GraphQLController;
 import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.reactive.config.EnableWebFlux;
 
 @Configuration
-@EnableWebMvc
+@EnableWebFlux
 @ComponentScan(basePackageClasses = GraphQLController.class)
 public class TestAppConfig {
 
@@ -23,6 +25,11 @@ public class TestAppConfig {
     @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
+    }
+
+    @Bean
+    public WebRequest webRequest() {
+        return Mockito.mock(WebRequest.class);
     }
 
 }

@@ -1,20 +1,18 @@
-package graphql.spring.web.reactive.components;
+package testconfig;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import graphql.GraphQL;
+import graphql.spring.web.servlet.components.GraphQLController;
 import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.reactive.config.EnableWebFlux;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
-@EnableWebFlux
+@EnableWebMvc
 @ComponentScan(basePackageClasses = GraphQLController.class)
-@PropertySource("classpath:different-url.properties")
-public class DifferentUrlTestAppConfig {
+public class TestAppConfig {
 
 
     @Bean
@@ -26,11 +24,6 @@ public class DifferentUrlTestAppConfig {
     @Bean
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
-    }
-
-    @Bean
-    public WebRequest webRequest() {
-        return Mockito.mock(WebRequest.class);
     }
 
 }

@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
+import testconfig.DifferentUrlTestAppConfig;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
