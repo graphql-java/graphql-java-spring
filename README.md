@@ -48,7 +48,7 @@ There are four different artifacts:
 
 ## Getting started with Spring Boot (webflux and webmvc)
 
-The Spring Boot Starter artifact provides a HTTP endpoint on ${graphql.url} with the default value "/graphql" just by being on the classpath.
+The Spring Boot Starter artifact provides a HTTP endpoint on `${graphql.url}` with the default value `"/graphql"` just by being on the classpath.
 
 The only requirement is to have a Bean of type `graphql.GraphQL` available.
 
