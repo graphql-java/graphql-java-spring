@@ -1,6 +1,9 @@
+# NOT FULLY RELEASED YET
+
 # GraphQL Java Spring
 
 ## Status
+
 
 Version 1.0 is released.
 
