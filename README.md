@@ -39,12 +39,12 @@ the spring documentation itself about the differences.
 
 ## Artifacts
 
-There are four different artifacts:
+There are four different artifacts: (all with group id `com.graphql-java`)
 
-1. graphql-java-spring-webflux 
-2. graphql-java-spring-boot-starter-webflux
-3. graphql-java-spring-webmvc
-4. graphql-java-spring-boot-starter-webmvc 
+1. `graphql-java-spring-webflux`
+2. `graphql-java-spring-boot-starter-webflux`
+3. `graphql-java-spring-webmvc`
+4. `graphql-java-spring-boot-starter-webmvc`
 
 
 
