@@ -7,6 +7,8 @@ Version 1.0 is released.
 We have a [spectrum chat](https://spectrum.chat/graphql-java) for general questions.
 
 
+## Overview
+
 This project integrates [GraphQL Java](https://github.com/graphql-java/graphql-java) into Spring/Spring Boot, by enabling query execution via HTTP.
 
 While the GraphQL Specification itself doesn't specify any transport protocol there is a quasi standard how to do it described 
