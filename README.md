@@ -1,5 +1,3 @@
-# NOT FULLY RELEASED YET
-
 # GraphQL Java Spring
 
 ## Status
