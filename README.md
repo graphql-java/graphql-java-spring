@@ -111,10 +111,11 @@ The following properties are currently available:
 
 The following Beans can be overridden by providing a different implementation. 
 
-| Interface | Description | 
-| --- | --- | 
-| GraphQLInvocation | Executes one request. The default impl just calls the provided `GraphQL` bean.|
-| ExecutionResultHandler | Takes a `ExecutionResult` and sends the result back to the client. The default impl returns `ExecutionResult.toSpecification()` as json. |
+| Interface | Description | Default Implementation |
+| --- | --- | --- |
+| `GraphQLInvocation` | Executes one request. The default impl just calls the provided `GraphQL` bean. | `DefaultGraphQLInvocation` |
+| `GraphQLContextBuilder` | Builds the context `Object` passed to the `ExecutionInput`. Used by the `DefaultGraphQLInvocation`. | None |
+| `ExecutionResultHandler` | Takes a `ExecutionResult` and sends the result back to the client. The default impl returns `ExecutionResult.toSpecification()` as json. | `DefaultExecutionResultHandler` |
 
 
 
