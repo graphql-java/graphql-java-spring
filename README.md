@@ -13,6 +13,9 @@ Goals / Design:
 - Minimal Dependencies: the only dependencies are GraphQL Java and Spring projects (including Jackson for JSON handling).
 - No additional abstraction layer on top of GraphQL Java: GraphQL Java is meant to be used directly. 
 
+## Status
+
+Version 1.0 is released.
 
 ## Supported HTTP Requests
 
@@ -29,6 +32,7 @@ We support both spring web types: the fully non-blocking `webflux` and the tradi
 
 Please see [here](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html#webflux-framework-choice) in 
 the spring documentation itself about the differences.
+
 
 
 ## Artifacts
@@ -86,5 +90,25 @@ for webmvc:
 
 ```
 
+## Ways to customize   
+
+
+### Properties
+
+The following properties are currently available:
+
+| Property | Description | Default Value |
+| --- | --- | --- |
+| graphql.url | the endpoint url | graphql |
+
+
+### Beans
+
+The following Beans can be overridden by providing a different implementation. 
+
+| Interface | Description | 
+| --- | --- | 
+| GraphQLInvocation | Executes one request. The default impl just calls the provided `GraphQL` bean.|
+| ExecutionResultHandler | Takes a `ExecutionResult` and sends the result back to the client. The default impl returns `ExecutionResult.toSpecification()` as json.  |
 
 
