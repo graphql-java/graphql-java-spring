@@ -98,6 +98,7 @@ for webmvc:
 The following properties are currently available:
 
 | Property | Description | Default Value |
+| --- | --- | --- |
 | graphql.url | the endpoint url | graphql |
 
 
@@ -106,6 +107,7 @@ The following properties are currently available:
 The following Beans can be overridden by providing a different implementation. 
 
 | Interface | Description | 
+| --- | --- | 
 | GraphQLInvocation | Executes one request. The default impl just calls the provided `GraphQL` bean.|
 | ExecutionResultHandler | Takes a `ExecutionResult` and sends the result back to the client. The default impl returns `ExecutionResult.toSpecification()` as json. |
 
