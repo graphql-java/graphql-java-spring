@@ -1,6 +1,10 @@
-# THIS IS STILL WIP AND NOT RELEASED YET
 # GraphQL Java Spring
 
+## Status
+
+Version 1.0 is released.
+
+See [release notes]()
 
 This project integrates [GraphQL Java](https://github.com/graphql-java/graphql-java) into Spring/Spring Boot, by enabling query execution via HTTP.
 
@@ -13,9 +17,6 @@ Goals / Design:
 - Minimal Dependencies: the only dependencies are GraphQL Java and Spring projects (including Jackson for JSON handling).
 - No additional abstraction layer on top of GraphQL Java: GraphQL Java is meant to be used directly. 
 
-## Status
-
-Version 1.0 is released.
 
 ## Supported HTTP Requests
 
