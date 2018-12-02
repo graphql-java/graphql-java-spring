@@ -19,7 +19,7 @@ import static org.junit.Assert.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = "graphql.url=otherUrl")
 @RunWith(SpringRunner.class)
-public class IntegrationTest {
+public class IntegrationTestDifferentUrl {
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -28,7 +28,7 @@ public class IntegrationTest {
     GraphQL graphql;
 
     @Test
-    public void endpointIsAvailable() {
+    public void endpointIsAvailableWithDifferentUrl() {
         String query = "{foo}";
 
         ExecutionResultImpl executionResult = ExecutionResultImpl.newExecutionResult()
@@ -38,7 +38,7 @@ public class IntegrationTest {
         ArgumentCaptor<ExecutionInput> captor = ArgumentCaptor.forClass(ExecutionInput.class);
         Mockito.when(graphql.executeAsync(captor.capture())).thenReturn(cf);
 
-        String body = this.restTemplate.getForObject("/graphql?query={query}", String.class, query);
+        String body = this.restTemplate.getForObject("/otherUrl/?query={query}", String.class, query);
 
         assertThat(body, is("{\"data\":\"bar\"}"));
         assertThat(captor.getValue().getQuery(), is(query));
