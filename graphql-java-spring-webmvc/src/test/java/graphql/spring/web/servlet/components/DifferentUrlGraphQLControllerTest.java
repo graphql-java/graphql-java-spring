@@ -80,7 +80,7 @@ public class DifferentUrlGraphQLControllerTest {
 
         MvcResult mvcResult = this.mockMvc.perform(post("/otherUrl")
                 .content(toJson(request))
-                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(request().asyncStarted())
                 .andReturn();

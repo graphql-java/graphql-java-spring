@@ -58,6 +58,7 @@ public class DifferentUrlGraphQLControllerTest {
         Mockito.when(graphql.executeAsync(captor.capture())).thenReturn(cf);
 
         client.post().uri("/otherUrl")
+                .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(request), Map.class)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .exchange()

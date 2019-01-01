@@ -86,7 +86,7 @@ public class GraphQLControllerTest {
 
         MvcResult mvcResult = this.mockMvc.perform(post("/graphql")
                 .content(toJson(request))
-                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(request().asyncStarted())
                 .andReturn();
@@ -121,7 +121,38 @@ public class GraphQLControllerTest {
 
         MvcResult mvcResult = this.mockMvc.perform(post("/graphql")
                 .content(toJson(request))
-                .contentType(MediaType.APPLICATION_JSON_UTF8))
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(request().asyncStarted())
+                .andReturn();
+
+        this.mockMvc.perform(asyncDispatch(mvcResult))
+                .andDo(print()).andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(jsonPath("data", is("bar")))
+                .andReturn();
+
+        assertThat(captor.getAllValues().size(), is(1));
+
+        assertThat(captor.getValue().getQuery(), is(query));
+
+    }
+
+    @Test
+    public void testApplicationGraphqlPostRequest() throws Exception {
+        String query = "{foo}";
+
+        ExecutionResultImpl executionResult = ExecutionResultImpl.newExecutionResult()
+                .data("bar")
+                .build();
+        CompletableFuture cf = CompletableFuture.completedFuture(executionResult);
+        ArgumentCaptor<ExecutionInput> captor = ArgumentCaptor.forClass(ExecutionInput.class);
+        Mockito.when(graphql.executeAsync(captor.capture())).thenReturn(cf);
+
+
+        MvcResult mvcResult = this.mockMvc.perform(post("/graphql")
+                .content(query)
+                .contentType("application/graphql"))
                 .andExpect(status().isOk())
                 .andExpect(request().asyncStarted())
                 .andReturn();
