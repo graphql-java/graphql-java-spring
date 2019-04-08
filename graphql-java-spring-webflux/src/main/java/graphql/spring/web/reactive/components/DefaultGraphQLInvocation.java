@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 public class DefaultGraphQLInvocation implements GraphQLInvocation {
 
     @Autowired
-    private GraphQL graphQL;
+    GraphQL graphQL;
 
     @Autowired
     ExecutionInputCustomizer executionInputCustomizer;

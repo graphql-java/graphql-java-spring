@@ -43,6 +43,7 @@ subprojects {
         springVersion = "5.1.2.RELEASE"
         springBootVersion = "2.1.0.RELEASE"
         jacksonVersion = "2.9.6"
+        assertJVersion = "3.11.1"
     }
 
     repositories {
