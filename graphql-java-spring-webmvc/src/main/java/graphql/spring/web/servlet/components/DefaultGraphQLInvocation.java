@@ -4,6 +4,7 @@ import graphql.ExecutionInput;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
 import graphql.Internal;
+import graphql.spring.web.servlet.ExecutionInputCustomizer;
 import graphql.spring.web.servlet.GraphQLInvocation;
 import graphql.spring.web.servlet.GraphQLInvocationData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,10 @@ import java.util.concurrent.CompletableFuture;
 public class DefaultGraphQLInvocation implements GraphQLInvocation {
 
     @Autowired
-    private GraphQL graphQL;
+    GraphQL graphQL;
+
+    @Autowired
+    ExecutionInputCustomizer executionInputCustomizer;
 
     @Override
     public CompletableFuture<ExecutionResult> invoke(GraphQLInvocationData invocationData, WebRequest webRequest) {
@@ -26,7 +30,8 @@ public class DefaultGraphQLInvocation implements GraphQLInvocation {
                 .operationName(invocationData.getOperationName())
                 .variables(invocationData.getVariables())
                 .build();
-        return graphQL.executeAsync(executionInput);
+        CompletableFuture<ExecutionInput> customizedExecutionInput = executionInputCustomizer.customizeExecutionInput(executionInput, webRequest);
+        return customizedExecutionInput.thenCompose(graphQL::executeAsync);
     }
 
 }

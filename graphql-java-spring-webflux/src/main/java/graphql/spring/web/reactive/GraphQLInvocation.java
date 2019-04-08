@@ -8,6 +8,6 @@ import reactor.core.publisher.Mono;
 @PublicApi
 public interface GraphQLInvocation {
 
-    Mono<ExecutionResult> invoke(GraphQLInvocationData invocationData, ServerWebExchange webRequest);
+    Mono<ExecutionResult> invoke(GraphQLInvocationData invocationData, ServerWebExchange serverWebExchange);
 
 }
