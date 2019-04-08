@@ -1,11 +1,11 @@
 package graphql.spring.web.servlet.components;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import graphql.ExecutionResult;
 import graphql.Internal;
 import graphql.spring.web.servlet.ExecutionResultHandler;
 import graphql.spring.web.servlet.GraphQLInvocation;
 import graphql.spring.web.servlet.GraphQLInvocationData;
+import graphql.spring.web.servlet.JsonSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -35,7 +35,7 @@ public class GraphQLController {
     ExecutionResultHandler executionResultHandler;
 
     @Autowired
-    ObjectMapper objectMapper;
+    JsonSerializer jsonSerializer;
 
     @RequestMapping(value = "${graphql.url:graphql}",
             method = RequestMethod.POST,
@@ -64,7 +64,7 @@ public class GraphQLController {
         // }
 
         if (MediaType.APPLICATION_JSON_VALUE.equals(contentType)) {
-            GraphQLRequestBody request = objectMapper.readValue(body, GraphQLRequestBody.class);
+            GraphQLRequestBody request = jsonSerializer.deserialize(body, GraphQLRequestBody.class);
             if (request.getQuery() == null) {
                 request.setQuery("");
             }
@@ -122,13 +122,10 @@ public class GraphQLController {
     }
 
     private Map<String, Object> convertVariablesJson(String jsonMap) {
-        if (jsonMap == null) return Collections.emptyMap();
-        try {
-            return objectMapper.readValue(jsonMap, Map.class);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not convert variables GET parameter: expected a JSON map", e);
+        if (jsonMap == null) {
+            return Collections.emptyMap();
         }
-
+        return jsonSerializer.deserialize(jsonMap, Map.class);
     }
 
     private Object executeRequest(
