@@ -8,7 +8,7 @@ import reactor.core.publisher.Mono;
 /**
  * Lets you customize the #ExecutionInput before the query is executed.
  * You can for example set a context object or define a root value.
- * <p/>
+ * <p>
  * This is only used if you use the default {@link GraphQLInvocation}.
  */
 @PublicApi
