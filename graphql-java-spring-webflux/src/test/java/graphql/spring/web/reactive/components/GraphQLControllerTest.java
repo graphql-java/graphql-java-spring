@@ -64,6 +64,7 @@ public class GraphQLControllerTest {
         Mockito.when(graphql.executeAsync(captor.capture())).thenReturn(cf);
 
         client.post().uri("/graphql")
+                .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(request), Map.class)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .exchange()
@@ -92,6 +93,7 @@ public class GraphQLControllerTest {
         Mockito.when(graphql.executeAsync(captor.capture())).thenReturn(cf);
 
         client.post().uri("/graphql")
+                .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(request), Map.class)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .exchange()
@@ -104,6 +106,92 @@ public class GraphQLControllerTest {
         assertThat(captor.getValue().getQuery(), is(query));
     }
 
+    @Test
+    public void testQueryParamPostRequest() throws Exception {
+        String variablesJson = "{\"variable\":\"variableValue\"}";
+        String variablesValue = URLEncoder.encode(variablesJson, "UTF-8");
+        String query = "query myQuery {foo}";
+        String queryString = URLEncoder.encode(query, "UTF-8");
+        String operationName = "myQuery";
+
+        ExecutionResultImpl executionResult = ExecutionResultImpl.newExecutionResult()
+                .data("bar")
+                .build();
+        CompletableFuture cf = CompletableFuture.completedFuture(executionResult);
+        ArgumentCaptor<ExecutionInput> captor = ArgumentCaptor.forClass(ExecutionInput.class);
+        Mockito.when(graphql.executeAsync(captor.capture())).thenReturn(cf);
+
+        client.post().uri(uriBuilder -> uriBuilder.path("/graphql")
+                .queryParam("variables", variablesValue)
+                .queryParam("query", queryString)
+                .queryParam("operationName", operationName)
+                .build(variablesJson, queryString))
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("data").isEqualTo("bar");
+
+        assertThat(captor.getAllValues().size(), is(1));
+
+        Map<String, Object> variables = new LinkedHashMap<>();
+        variables.put("variable", "variableValue");
+        assertThat(captor.getValue().getQuery(), is(query));
+        assertThat(captor.getValue().getVariables(), is(variables));
+        assertThat(captor.getValue().getOperationName(), is(operationName));
+    }
+
+    @Test
+    public void testSimpleQueryParamPostRequest() throws Exception {
+        String query = "{foo}";
+        String queryString = URLEncoder.encode(query, "UTF-8");
+
+        ExecutionResultImpl executionResult = ExecutionResultImpl.newExecutionResult()
+                .data("bar")
+                .build();
+        CompletableFuture cf = CompletableFuture.completedFuture(executionResult);
+        ArgumentCaptor<ExecutionInput> captor = ArgumentCaptor.forClass(ExecutionInput.class);
+        Mockito.when(graphql.executeAsync(captor.capture())).thenReturn(cf);
+
+        client.post().uri(uriBuilder -> uriBuilder.path("/graphql")
+                .queryParam("query", queryString)
+                .build())
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("data").isEqualTo("bar");
+
+
+        assertThat(captor.getAllValues().size(), is(1));
+
+        assertThat(captor.getValue().getQuery(), is(query));
+    }
+
+    @Test
+    public void testApplicationGraphqlPostRequest() throws Exception {
+        String query = "{foo}";
+
+        ExecutionResultImpl executionResult = ExecutionResultImpl.newExecutionResult()
+                .data("bar")
+                .build();
+        CompletableFuture cf = CompletableFuture.completedFuture(executionResult);
+        ArgumentCaptor<ExecutionInput> captor = ArgumentCaptor.forClass(ExecutionInput.class);
+        Mockito.when(graphql.executeAsync(captor.capture())).thenReturn(cf);
+
+        client.post().uri("/graphql")
+                .contentType(new MediaType("application", "graphql"))
+                .body(Mono.just(query), String.class)
+                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("data").isEqualTo("bar");
+
+        assertThat(captor.getAllValues().size(), is(1));
+
+        assertThat(captor.getValue().getQuery(), is(query));
+    }
 
     @Test
     public void testGetRequest() throws Exception {
