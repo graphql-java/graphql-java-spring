@@ -18,7 +18,6 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 import testconfig.TestAppConfig;
 
-import java.net.URLEncoder;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -109,9 +108,7 @@ public class GraphQLControllerTest {
     @Test
     public void testQueryParamPostRequest() throws Exception {
         String variablesJson = "{\"variable\":\"variableValue\"}";
-        String variablesValue = URLEncoder.encode(variablesJson, "UTF-8");
         String query = "query myQuery {foo}";
-        String queryString = URLEncoder.encode(query, "UTF-8");
         String operationName = "myQuery";
 
         ExecutionResultImpl executionResult = ExecutionResultImpl.newExecutionResult()
@@ -122,10 +119,10 @@ public class GraphQLControllerTest {
         Mockito.when(graphql.executeAsync(captor.capture())).thenReturn(cf);
 
         client.post().uri(uriBuilder -> uriBuilder.path("/graphql")
-                .queryParam("variables", variablesValue)
-                .queryParam("query", queryString)
-                .queryParam("operationName", operationName)
-                .build(variablesJson, queryString))
+                .queryParam("variables", "{variables}")
+                .queryParam("query", "{query}")
+                .queryParam("operationName", "{operationName}")
+                .build(variablesJson, query, operationName))
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .exchange()
                 .expectStatus().isOk()
@@ -144,7 +141,6 @@ public class GraphQLControllerTest {
     @Test
     public void testSimpleQueryParamPostRequest() throws Exception {
         String query = "{foo}";
-        String queryString = URLEncoder.encode(query, "UTF-8");
 
         ExecutionResultImpl executionResult = ExecutionResultImpl.newExecutionResult()
                 .data("bar")
@@ -154,8 +150,8 @@ public class GraphQLControllerTest {
         Mockito.when(graphql.executeAsync(captor.capture())).thenReturn(cf);
 
         client.post().uri(uriBuilder -> uriBuilder.path("/graphql")
-                .queryParam("query", queryString)
-                .build())
+                .queryParam("query", "{query}")
+                .build(query))
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .exchange()
                 .expectStatus().isOk()
@@ -196,9 +192,7 @@ public class GraphQLControllerTest {
     @Test
     public void testGetRequest() throws Exception {
         String variablesJson = "{\"variable\":\"variableValue\"}";
-        String variablesValue = URLEncoder.encode(variablesJson, "UTF-8");
         String query = "query myQuery {foo}";
-        String queryString = URLEncoder.encode(query, "UTF-8");
         String operationName = "myQuery";
 
         ExecutionResultImpl executionResult = ExecutionResultImpl.newExecutionResult()
@@ -209,10 +203,10 @@ public class GraphQLControllerTest {
         Mockito.when(graphql.executeAsync(captor.capture())).thenReturn(cf);
 
         client.get().uri(uriBuilder -> uriBuilder.path("/graphql")
-                .queryParam("variables", variablesValue)
-                .queryParam("query", queryString)
-                .queryParam("operationName", operationName)
-                .build(variablesJson, queryString))
+                .queryParam("variables", "{variables}")
+                .queryParam("query", "{query}")
+                .queryParam("operationName", "{operationName}")
+                .build(variablesJson, query, operationName))
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .exchange()
                 .expectStatus().isOk()
@@ -231,7 +225,6 @@ public class GraphQLControllerTest {
     @Test
     public void testSimpleGetRequest() throws Exception {
         String query = "{foo}";
-        String queryString = URLEncoder.encode(query, "UTF-8");
 
         ExecutionResultImpl executionResult = ExecutionResultImpl.newExecutionResult()
                 .data("bar")
@@ -241,8 +234,8 @@ public class GraphQLControllerTest {
         Mockito.when(graphql.executeAsync(captor.capture())).thenReturn(cf);
 
         client.get().uri(uriBuilder -> uriBuilder.path("/graphql")
-                .queryParam("query", queryString)
-                .build())
+                .queryParam("query", "{query}")
+                .build(query))
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .exchange()
                 .expectStatus().isOk()
