@@ -12,21 +12,29 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.multipart.MultipartFile;
 import testconfig.TestAppConfig;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -40,6 +48,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ContextConfiguration(classes = {TestAppConfig.class})
 @WebAppConfiguration
 public class GraphQLControllerTest {
+
+
 
     private MockMvc mockMvc;
 
@@ -305,6 +315,59 @@ public class GraphQLControllerTest {
 
         assertThat(captor.getValue().getQuery(), is(query));
 
+    }
+
+    @Test
+    public void testMultiPartRequest() throws Exception{
+        final String query ="mutation($fooInput : FooInput!, $file: Upload!, $files: [Upload]!){ doSomething(fooInput: $fooInput, f: $file, fList: $files) }";
+        final String variables="{ \"fooInput\":{ \"x\":\"foo\",\"y\":\"bar\"}, \"file\":null, \"files\":[null,null,null]}";
+        final String operationName = "null";
+
+        final String operationsParam = String.format("{\"query\":\"%s\", \"variables\":%s, \"operationName\":%s }",query,variables,operationName);
+        final String mapParam = "{\"0\":[\"variables.file\"],\"1\":[\"variables.files.0\"],\"2\":[\"variables.files.1\"],\"3\":[\"variables.files.2\"]}";
+
+        MockMultipartFile firstFile = new MockMultipartFile("0","f0.txt","text/plain","file 0 test test".getBytes());
+        MockMultipartFile secondFile = new MockMultipartFile("1","f1.txt","text/plain", "file 1 test".getBytes());
+        MockMultipartFile thirdFile = new MockMultipartFile("2","f2.txt","text/plain", "file 2 text".getBytes());
+        MockMultipartFile fourthFile = new MockMultipartFile("3","f3.txt","text/plain","file 3 test".getBytes());
+
+        ExecutionResultImpl executionResult = ExecutionResultImpl.newExecutionResult()
+                .data("bar")
+                .build();
+        CompletableFuture cf = CompletableFuture.completedFuture(executionResult);
+        ArgumentCaptor<ExecutionInput> captor = ArgumentCaptor.forClass(ExecutionInput.class);
+        Mockito.when(graphql.executeAsync(captor.capture())).thenReturn(cf);
+
+
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.multipart("/graphql")
+                .file(firstFile)
+                .file(secondFile)
+                .file(thirdFile)
+                .file(fourthFile)
+                .param("operations",operationsParam)
+                .param("map",mapParam);
+
+        MvcResult mvcResult = this.mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andExpect(request().asyncStarted())
+                .andReturn();
+
+        this.mockMvc.perform(asyncDispatch(mvcResult))
+                .andDo(print()).andExpect(status().isOk())
+                .andExpect(jsonPath("data", is("bar")))
+                .andReturn();
+
+        assertThat(captor.getAllValues().size(), is(1));
+
+        assertThat(captor.getValue().getQuery(), is(query));
+        assertTrue(captor.getValue().getVariables().containsKey("fooInput"));
+
+        assertTrue(captor.getValue().getVariables().containsKey("file"));
+        assertThat(captor.getValue().getVariables().get("file"),instanceOf(MultipartFile.class));
+        assertThat(((MultipartFile) captor.getValue().getVariables().get("file")).getOriginalFilename(),is("f0.txt"));
+
+        assertTrue(captor.getValue().getVariables().containsKey("files"));
+        assertThat(((Collection)captor.getValue().getVariables().get("files")).size(),is(3));
     }
 
 }

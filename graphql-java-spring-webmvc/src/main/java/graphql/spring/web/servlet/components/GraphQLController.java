@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -93,7 +94,7 @@ public class GraphQLController {
             if(request.getQuery() != null) {
                 LinkedHashMap<String, ArrayList<String>> multipartFileKeyVariablePathMap = this.jsonSerializer.deserialize(webRequest.getParameter("map"), LinkedHashMap.class);
 
-                StandardMultipartHttpServletRequest multiPartRequest = (StandardMultipartHttpServletRequest) ((ServletWebRequest) webRequest).getNativeRequest();
+                MultipartHttpServletRequest multiPartRequest = (MultipartHttpServletRequest) ((ServletWebRequest) webRequest).getNativeRequest();
                 Map<String, MultipartFile> multipartFileMap = multiPartRequest.getFileMap();
 
                 for(Map.Entry<String,MultipartFile> e: multipartFileMap.entrySet()){
