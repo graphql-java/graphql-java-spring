@@ -5,8 +5,14 @@ import graphql.ExecutionResult;
 import graphql.GraphQL;
 import graphql.spring.web.reactive.ExecutionInputCustomizer;
 import graphql.spring.web.reactive.GraphQLInvocationData;
+import org.dataloader.DataLoaderRegistry;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -16,12 +22,13 @@ import java.util.Map;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class DefaultGraphQLInvocationTest {
 
+    @Mock
+    private ObjectProvider<DataLoaderRegistry> dataLoaderRegistry;
 
     @Test
     public void testCustomizerIsCalled() {
@@ -30,15 +37,17 @@ public class DefaultGraphQLInvocationTest {
         String operationName = "myQuery";
         Map<String, Object> variables = new LinkedHashMap<>();
 
-        DefaultGraphQLInvocation defaultGraphQLInvocation = new DefaultGraphQLInvocation();
-        ExecutionInputCustomizer executionInputCustomizer = mock(ExecutionInputCustomizer.class);
-        defaultGraphQLInvocation.executionInputCustomizer = executionInputCustomizer;
+        Mockito.when(dataLoaderRegistry.getIfAvailable(any())).thenReturn(new DataLoaderRegistry());
+
         GraphQL graphQL = mock(GraphQL.class);
-        defaultGraphQLInvocation.graphQL = graphQL;
+        ExecutionInputCustomizer executionInputCustomizer = mock(ExecutionInputCustomizer.class);
+        DefaultGraphQLInvocation defaultGraphQLInvocation = new DefaultGraphQLInvocation(graphQL, executionInputCustomizer, dataLoaderRegistry);
         ExecutionResult executionResult = mock(ExecutionResult.class);
         when(graphQL.executeAsync(any(ExecutionInput.class))).thenReturn(completedFuture(executionResult));
 
-        GraphQLInvocationData graphQLInvocationData = new GraphQLInvocationData(query, operationName, variables);
+        GraphQLInvocationData graphQLInvocationData = new GraphQLInvocationData(query);
+        graphQLInvocationData.setOperationName(operationName);
+        graphQLInvocationData.setVariables(variables);
         ServerWebExchange serverWebExchange = mock(ServerWebExchange.class);
 
         ArgumentCaptor<ExecutionInput> captor1 = ArgumentCaptor.forClass(ExecutionInput.class);

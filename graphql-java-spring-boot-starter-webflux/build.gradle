@@ -6,4 +6,6 @@ dependencies {
 
     testImplementation("org.springframework.boot:spring-boot-starter-webflux:$springBootVersion")
     testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
+    annotationProcessor "org.springframework.boot:spring-boot-autoconfigure-processor:$springBootVersion"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:$springBootVersion"
 }
