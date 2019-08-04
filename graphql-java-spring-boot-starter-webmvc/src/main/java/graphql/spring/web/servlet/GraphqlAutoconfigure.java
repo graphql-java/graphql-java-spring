@@ -16,13 +16,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static graphql.spring.web.servlet.config.BeanNames.*;
+import static org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication.Type;
 
 /**
  * {@link EnableAutoConfiguration Auto-configuration} for graphql.
  */
 @EnableGraphql
 @EnableConfigurationProperties(GraphqlProperties.class)
-@ConditionalOnWebApplication
+@ConditionalOnWebApplication(type = Type.SERVLET)
 @Configuration(proxyBeanMethods = false)
 public class GraphqlAutoconfigure {
 
