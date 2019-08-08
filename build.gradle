@@ -40,8 +40,8 @@ subprojects {
 
     ext {
         graphqlJavaVersion = "13.0"
-        springVersion = "5.2.0.M3"
-        springBootVersion = "2.2.0.M4"
+        springVersion = "5.2.0.RC1"
+        springBootVersion = "2.2.0.M5"
         jacksonVersion = "2.9.9"
         assertJVersion = "3.12.2"
     }
