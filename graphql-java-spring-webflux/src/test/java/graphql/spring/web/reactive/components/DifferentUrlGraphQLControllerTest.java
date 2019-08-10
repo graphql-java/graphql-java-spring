@@ -1,6 +1,8 @@
 package graphql.spring.web.reactive.components;
 
+import config.TestConfig;
 import graphql.ExecutionInput;
+import graphql.ExecutionResult;
 import graphql.ExecutionResultImpl;
 import graphql.GraphQL;
 import org.junit.Before;
@@ -12,11 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
-import testconfig.DifferentUrlTestAppConfig;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -26,15 +28,16 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {DifferentUrlTestAppConfig.class})
+@ContextConfiguration(classes = {TestConfig.class})
 @WebAppConfiguration
+@TestPropertySource("classpath:different-url.properties")
 public class DifferentUrlGraphQLControllerTest {
 
     @Autowired
     private ApplicationContext applicationContext;
 
     @Autowired
-    GraphQL graphql;
+    private GraphQL graphql;
 
     private WebTestClient client;
 
@@ -45,7 +48,7 @@ public class DifferentUrlGraphQLControllerTest {
 
 
     @Test
-    public void testDifferentUrl() throws Exception {
+    public void testDifferentUrl() {
         Map<String, Object> request = new LinkedHashMap<>();
         String query = "{foo}";
         request.put("query", query);
@@ -53,14 +56,14 @@ public class DifferentUrlGraphQLControllerTest {
         ExecutionResultImpl executionResult = ExecutionResultImpl.newExecutionResult()
                 .data("bar")
                 .build();
-        CompletableFuture cf = CompletableFuture.completedFuture(executionResult);
+        CompletableFuture<ExecutionResult> cf = CompletableFuture.completedFuture(executionResult);
         ArgumentCaptor<ExecutionInput> captor = ArgumentCaptor.forClass(ExecutionInput.class);
         Mockito.when(graphql.executeAsync(captor.capture())).thenReturn(cf);
 
         client.post().uri("/otherUrl")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(request), Map.class)
-                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()

@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-graphql.spring.web.reactive.GraphQLEndpointConfiguration
+graphql.spring.web.reactive.GraphqlAutoconfigure

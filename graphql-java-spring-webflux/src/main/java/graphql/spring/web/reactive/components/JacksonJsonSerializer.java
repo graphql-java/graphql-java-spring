@@ -2,17 +2,13 @@ package graphql.spring.web.reactive.components;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import graphql.spring.web.reactive.JsonSerializer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-@Component
 public class JacksonJsonSerializer implements JsonSerializer {
 
     private ObjectMapper objectMapper;
 
-    @Autowired
     public JacksonJsonSerializer(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }

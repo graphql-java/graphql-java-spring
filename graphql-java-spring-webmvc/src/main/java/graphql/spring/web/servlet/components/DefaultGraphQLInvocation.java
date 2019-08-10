@@ -8,37 +8,35 @@ import graphql.spring.web.servlet.ExecutionInputCustomizer;
 import graphql.spring.web.servlet.GraphQLInvocation;
 import graphql.spring.web.servlet.GraphQLInvocationData;
 import org.dataloader.DataLoaderRegistry;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.web.context.request.WebRequest;
 
 import java.util.concurrent.CompletableFuture;
 
-@Component
 @Internal
 public class DefaultGraphQLInvocation implements GraphQLInvocation {
 
-    @Autowired
-    GraphQL graphQL;
+    private final GraphQL graphql;
 
-    @Autowired(required = false)
-    DataLoaderRegistry dataLoaderRegistry;
+    private final ExecutionInputCustomizer customizer;
 
-    @Autowired
-    ExecutionInputCustomizer executionInputCustomizer;
+    private final DataLoaderRegistry registry;
+
+    public DefaultGraphQLInvocation(GraphQL graphql, ExecutionInputCustomizer customizer, ObjectProvider<DataLoaderRegistry> registry) {
+        this.graphql = graphql;
+        this.customizer = customizer;
+        this.registry = registry.getIfAvailable(DataLoaderRegistry::new);
+    }
 
     @Override
     public CompletableFuture<ExecutionResult> invoke(GraphQLInvocationData invocationData, WebRequest webRequest) {
-        ExecutionInput.Builder executionInputBuilder = ExecutionInput.newExecutionInput()
+        ExecutionInput executionInput = ExecutionInput.newExecutionInput()
                 .query(invocationData.getQuery())
                 .operationName(invocationData.getOperationName())
-                .variables(invocationData.getVariables());
-        if (dataLoaderRegistry != null) {
-            executionInputBuilder.dataLoaderRegistry(dataLoaderRegistry);
-        }
-        ExecutionInput executionInput = executionInputBuilder.build();
-        CompletableFuture<ExecutionInput> customizedExecutionInput = executionInputCustomizer.customizeExecutionInput(executionInput, webRequest);
-        return customizedExecutionInput.thenCompose(graphQL::executeAsync);
+                .variables(invocationData.getVariables())
+                .dataLoaderRegistry(registry)
+                .build();
+        CompletableFuture<ExecutionInput> customizedExecutionInput = customizer.customizeExecutionInput(executionInput, webRequest);
+        return customizedExecutionInput.thenCompose(graphql::executeAsync);
     }
-
 }

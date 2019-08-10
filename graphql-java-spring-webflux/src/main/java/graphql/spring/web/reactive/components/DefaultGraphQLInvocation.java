@@ -8,36 +8,34 @@ import graphql.spring.web.reactive.ExecutionInputCustomizer;
 import graphql.spring.web.reactive.GraphQLInvocation;
 import graphql.spring.web.reactive.GraphQLInvocationData;
 import org.dataloader.DataLoaderRegistry;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-@Component
 @Internal
 public class DefaultGraphQLInvocation implements GraphQLInvocation {
 
-    @Autowired
-    GraphQL graphQL;
+    private final GraphQL graphQL;
 
-    @Autowired(required = false)
-    DataLoaderRegistry dataLoaderRegistry;
+    private final ExecutionInputCustomizer executionInputCustomizer;
 
-    @Autowired
-    ExecutionInputCustomizer executionInputCustomizer;
+    private final ObjectProvider<DataLoaderRegistry> dataLoaderRegistry;
+
+    public DefaultGraphQLInvocation(GraphQL graphQL, ExecutionInputCustomizer executionInputCustomizer, ObjectProvider<DataLoaderRegistry> dataLoaderRegistry) {
+        this.graphQL = graphQL;
+        this.executionInputCustomizer = executionInputCustomizer;
+        this.dataLoaderRegistry = dataLoaderRegistry;
+    }
 
     @Override
     public Mono<ExecutionResult> invoke(GraphQLInvocationData invocationData, ServerWebExchange serverWebExchange) {
-        ExecutionInput.Builder executionInputBuilder = ExecutionInput.newExecutionInput()
+        ExecutionInput executionInput = ExecutionInput.newExecutionInput()
                 .query(invocationData.getQuery())
                 .operationName(invocationData.getOperationName())
-                .variables(invocationData.getVariables());
-        if (dataLoaderRegistry != null) {
-            executionInputBuilder.dataLoaderRegistry(dataLoaderRegistry);
-        }
-        ExecutionInput executionInput = executionInputBuilder.build();
+                .variables(invocationData.getVariables())
+                .dataLoaderRegistry(dataLoaderRegistry.getIfAvailable(DataLoaderRegistry::new))
+                .build();
         Mono<ExecutionInput> customizedExecutionInputMono = executionInputCustomizer.customizeExecutionInput(executionInput, serverWebExchange);
         return customizedExecutionInputMono.flatMap(customizedExecutionInput -> Mono.fromCompletionStage(graphQL.executeAsync(customizedExecutionInput)));
     }
-
 }
