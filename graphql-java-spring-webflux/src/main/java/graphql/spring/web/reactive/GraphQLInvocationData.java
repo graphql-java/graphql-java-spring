@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import graphql.Assert;
 import graphql.PublicApi;
 import graphql.spring.web.reactive.jackson.JacksonVariableDeserializer;
+import org.springframework.lang.Nullable;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @PublicApi
@@ -17,7 +19,7 @@ public class GraphQLInvocationData {
     private String operationName;
 
     @JsonDeserialize(using = JacksonVariableDeserializer.class)
-    private Map<String, Object> variables;
+    private Map<String, Object> variables = new HashMap<>();
 
     @JsonCreator
     public GraphQLInvocationData(@JsonProperty("query") String query) {
@@ -28,11 +30,12 @@ public class GraphQLInvocationData {
         return query;
     }
 
+    @Nullable
     public String getOperationName() {
         return operationName;
     }
 
-    public void setOperationName(String operationName) {
+    public void setOperationName(@Nullable String operationName) {
         this.operationName = operationName;
     }
 

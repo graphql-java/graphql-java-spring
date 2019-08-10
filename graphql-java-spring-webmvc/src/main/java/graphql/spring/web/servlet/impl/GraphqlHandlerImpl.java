@@ -13,6 +13,7 @@ import org.springframework.web.servlet.function.ServerResponse;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.concurrent.CompletableFuture;
 
 public class GraphqlHandlerImpl implements GraphqlHandler {
@@ -31,7 +32,8 @@ public class GraphqlHandlerImpl implements GraphqlHandler {
 
     @Override
     public ServerResponse invokeByParams(ServerRequest request) {
-        return execute(request, new GraphQLInvocationData(request.param("query").orElse(null)));
+        String query = request.param("query").orElseThrow(() -> new NoSuchElementException("No Value present"));
+        return execute(request, new GraphQLInvocationData(query));
     }
 
     @Override

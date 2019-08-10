@@ -55,7 +55,7 @@ There are four different artifacts: (all with group id `com.graphql-java`)
 
 The Spring Boot Starter artifact provides a HTTP endpoint on `${graphql.url}` with the default value `"/graphql"` just by being on the classpath.
 
-The only requirement is to have a Bean of type `graphql.GraphQL` available.
+The only requirement is to have a Bean of type `GraphQLSchema` available.
 
 Add the following dependency to your `build.gradle` (make sure `mavenCentral()` is among your repos)
 
@@ -95,8 +95,39 @@ for webmvc:
 
 ```
 
-## Ways to customize   
+## Getting started with spring
 
+1. Add the following dependency to build.gradle or pom.xml:
+
+    build.gradle:
+    ```groovy
+    dependencies {
+        implementation "com.graphql-java:graphql-java-spring-(webflux,webmvc):1.0"
+    }
+    ```
+    
+    pom.xml:
+    ```xml
+    <dependency>
+        <groupId>com.graphql-java</groupId>
+        <artifactId>graphql-java-spring-(webflux,webmvc)</artifactId>
+        <version>1.0</version>
+    </dependency>
+    ```
+
+2. Declare following beans:
+    
+    | Type | Name | Default Implementation |
+    | --- | --- | --- |
+    | GraphqlHandler | graphqlHandler | GraphqlHandlerImpl |
+    | ExecutionInputMapper | graphqlExecutionInputMapper | ExecutionInputMapperImpl |
+    | DataLoaderRegistry | graphqlDataLoaderRegistry | DataLoaderRegistry
+    | GraphqlConfigurer | graphqlConfigurer | - |
+    | GraphqlSchema | graphqlSchema | - |
+    
+3. Add @EnableGraphql to graphql configuration
+
+## Ways to customize   
 
 ### Properties
 
@@ -104,7 +135,9 @@ The following properties are currently available:
 
 | Property | Description | Default Value |
 | --- | --- | --- |
-| graphql.url | the endpoint url | graphql |
+| graphql.http-endpoint | the endpoint url | /graphql |
+| graphql.websocket-endpoint | the websocket endpoint url | /graphql |
+| graphql.url | the endpoint url | /graphql |
 
 
 ### Beans
@@ -116,6 +149,6 @@ The following Beans can be overridden by providing a different implementation.
 | GraphQLInvocation | Executes one request. The default impl just calls the provided `GraphQL` bean.|
 | ExecutionResultHandler | Takes a `ExecutionResult` and sends the result back to the client. The default impl returns `ExecutionResult.toSpecification()` as json. |
 
+### Jackson/GSON
 
-
-
+If you need to use GSON provide a different implementation of GraphqlHandler

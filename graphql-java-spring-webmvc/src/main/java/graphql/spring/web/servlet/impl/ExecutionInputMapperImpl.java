@@ -6,8 +6,6 @@ import graphql.spring.web.servlet.GraphQLInvocationData;
 import org.dataloader.DataLoaderRegistry;
 import org.springframework.web.servlet.function.ServerRequest;
 
-import java.util.HashMap;
-
 public class ExecutionInputMapperImpl implements ExecutionInputMapper {
 
     private final DataLoaderRegistry dataLoaderRegistry;
@@ -20,7 +18,7 @@ public class ExecutionInputMapperImpl implements ExecutionInputMapper {
     public ExecutionInput map(GraphQLInvocationData invocationData, ServerRequest request) {
         return ExecutionInput.newExecutionInput(invocationData.getQuery())
                 .operationName(invocationData.getOperationName())
-                .variables(invocationData.getVariables() != null ? invocationData.getVariables() : new HashMap<>())
+                .variables(invocationData.getVariables())
                 .dataLoaderRegistry(dataLoaderRegistry)
                 .build();
     }

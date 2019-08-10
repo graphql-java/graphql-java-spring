@@ -14,6 +14,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.concurrent.CompletableFuture;
 
 public class GraphqlHandlerImpl implements GraphqlHandler {
@@ -32,7 +33,8 @@ public class GraphqlHandlerImpl implements GraphqlHandler {
 
     @Override
     public Mono<ServerResponse> invokeByParams(ServerRequest request) {
-        return execute(request, new GraphQLInvocationData(request.queryParam("query").orElse(null)));
+        String query = request.queryParam("query").orElseThrow(() -> new NoSuchElementException("No Value present"));
+        return execute(request, new GraphQLInvocationData(query));
     }
 
     @Override
