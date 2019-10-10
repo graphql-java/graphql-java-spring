@@ -1,0 +1,7 @@
+{"properties": [
+    {
+      "name": "graphql.url",
+      "type": "java.lang.String",
+      "description": "the endpoint url"
+    }
+]}
