@@ -63,7 +63,7 @@ public class GraphQLController {
         //   "variables": { "myVariable": "someValue", ... }
         // }
 
-        if (MediaType.APPLICATION_JSON_VALUE.equals(contentType)) {
+        if (contentType != null && contentType.startsWith(MediaType.APPLICATION_JSON_VALUE)) {
             GraphQLRequestBody request = jsonSerializer.deserialize(body, GraphQLRequestBody.class);
             if (request.getQuery() == null) {
                 request.setQuery("");

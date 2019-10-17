@@ -64,7 +64,7 @@ public class GraphQLControllerTest {
         Mockito.when(graphql.executeAsync(captor.capture())).thenReturn(cf);
 
         client.post().uri("/graphql")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .body(Mono.just(request), Map.class)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .exchange()
@@ -93,7 +93,7 @@ public class GraphQLControllerTest {
         Mockito.when(graphql.executeAsync(captor.capture())).thenReturn(cf);
 
         client.post().uri("/graphql")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .body(Mono.just(request), Map.class)
                 .accept(MediaType.APPLICATION_JSON_UTF8)
                 .exchange()

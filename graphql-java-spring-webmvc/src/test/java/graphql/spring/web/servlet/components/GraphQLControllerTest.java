@@ -86,7 +86,7 @@ public class GraphQLControllerTest {
 
         MvcResult mvcResult = this.mockMvc.perform(post("/graphql")
                 .content(toJson(request))
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
                 .andExpect(request().asyncStarted())
                 .andReturn();
@@ -121,7 +121,7 @@ public class GraphQLControllerTest {
 
         MvcResult mvcResult = this.mockMvc.perform(post("/graphql")
                 .content(toJson(request))
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(status().isOk())
                 .andExpect(request().asyncStarted())
                 .andReturn();
