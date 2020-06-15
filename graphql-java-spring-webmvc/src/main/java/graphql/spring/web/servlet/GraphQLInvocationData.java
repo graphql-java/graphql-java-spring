@@ -14,7 +14,7 @@ public class GraphQLInvocationData {
     private final Map<String, Object> variables;
 
     public GraphQLInvocationData(String query, String operationName, Map<String, Object> variables) {
-        this.query = Assert.assertNotNull(query, "query must be provided");
+        this.query = Assert.assertNotNull(query, () -> "query must be provided");
         this.operationName = operationName;
         this.variables = variables != null ? variables : Collections.emptyMap();
     }
