@@ -3,7 +3,7 @@
 ## Status
 
 
-Version 1.0 is released.
+Version 2.0 is released.
 
 We have a [spectrum chat](https://spectrum.chat/graphql-java) for general questions.
 
@@ -62,14 +62,14 @@ Add the following dependency to your `build.gradle` (make sure `mavenCentral()` 
 for webflux:
 ```groovy
 dependencies {
-    implementation "com.graphql-java:graphql-java-spring-boot-starter-webflux:1.0"
+    implementation "com.graphql-java:graphql-java-spring-boot-starter-webflux:2.0"
 }
 ```
 
 for webmvc:
 ```groovy
 dependencies {
-    implementation "com.graphql-java:graphql-java-spring-boot-starter-webmvc:1.0"
+    implementation "com.graphql-java:graphql-java-spring-boot-starter-webmvc:2.0"
 }
 ```
 
@@ -80,7 +80,7 @@ for webflux
 <dependency>
     <groupId>com.graphql-java</groupId>
     <artifactId>graphql-java-spring-boot-starter-webflux</artifactId>
-    <version>1.0</version>
+    <version>2.0</version>
 </dependency>
 
 ```
@@ -90,7 +90,7 @@ for webmvc:
 <dependency>
     <groupId>com.graphql-java</groupId>
     <artifactId>graphql-java-spring-boot-starter-webmvc</artifactId>
-    <version>1.0</version>
+    <version>2.0</version>
 </dependency>
 
 ```
