@@ -9,7 +9,9 @@ import graphql.spring.web.servlet.JsonSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.MediaType;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +29,9 @@ import java.util.concurrent.CompletableFuture;
 @RestController
 @Internal
 public class GraphQLController {
+
+    static String APPLICATION_GRAPHQL_VALUE = "application/graphql";
+    static MediaType APPLICATION_GRAPHQL = MediaType.parseMediaType(APPLICATION_GRAPHQL_VALUE);
 
     @Autowired
     GraphQLInvocation graphQLInvocation;
@@ -48,6 +53,14 @@ public class GraphQLController {
             @RequestBody(required = false) String body,
             WebRequest webRequest) throws IOException {
 
+        MediaType mediaType = null;
+        if (!StringUtils.isEmpty(contentType)) {
+            try {
+                mediaType = MediaType.parseMediaType(contentType);
+            } catch (InvalidMediaTypeException ignore) {
+            }
+        }
+
         if (body == null) {
             body = "";
         }
@@ -63,7 +76,7 @@ public class GraphQLController {
         //   "variables": { "myVariable": "someValue", ... }
         // }
 
-        if (MediaType.APPLICATION_JSON_VALUE.equals(contentType)) {
+        if (MediaType.APPLICATION_JSON.equalsTypeAndSubtype(mediaType)) {
             GraphQLRequestBody request = jsonSerializer.deserialize(body, GraphQLRequestBody.class);
             if (request.getQuery() == null) {
                 request.setQuery("");
@@ -83,7 +96,7 @@ public class GraphQLController {
         // * If the "application/graphql" Content-Type header is present,
         //   treat the HTTP POST body contents as the GraphQL query string.
 
-        if ("application/graphql".equals(contentType)) {
+        if (APPLICATION_GRAPHQL.equalsTypeAndSubtype(mediaType)) {
             return executeRequest(body, null, null, webRequest);
         }
 
