@@ -5,7 +5,7 @@ import graphql.ExecutionResult;
 import graphql.GraphQL;
 import graphql.spring.web.servlet.ExecutionInputCustomizer;
 import graphql.spring.web.servlet.GraphQLInvocationData;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.web.context.request.WebRequest;
 

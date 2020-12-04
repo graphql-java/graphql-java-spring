@@ -3,22 +3,22 @@ package graphql.spring.web.reactive;
 import graphql.ExecutionInput;
 import graphql.ExecutionResultImpl;
 import graphql.GraphQL;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import java.util.concurrent.CompletableFuture;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 public class IntegrationTest {
 
     @Autowired
@@ -41,7 +41,7 @@ public class IntegrationTest {
         this.webClient.get().uri("/graphql?query={query}", query).exchange().expectStatus().isOk()
                 .expectBody(String.class).isEqualTo("{\"data\":\"bar\"}");
 
-        assertThat(captor.getValue().getQuery(), is(query));
+        assertThat(captor.getValue().getQuery()).isEqualTo(query);
     }
 
 }
