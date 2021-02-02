@@ -3,16 +3,16 @@ package graphql.spring.web.reactive.components;
 import graphql.ExecutionInput;
 import graphql.ExecutionResultImpl;
 import graphql.GraphQL;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -22,10 +22,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
+
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {TestAppConfig.class})
 @WebAppConfiguration
 public class GraphQLControllerTest {
@@ -38,7 +38,7 @@ public class GraphQLControllerTest {
 
     private WebTestClient client;
 
-    @Before
+    @BeforeEach
     public void setup() {
         client = WebTestClient.bindToApplicationContext(applicationContext).build();
     }
@@ -65,21 +65,21 @@ public class GraphQLControllerTest {
         client.post().uri("/graphql")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(request), Map.class)
-                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("data").isEqualTo("bar");
 
-        assertThat(captor.getAllValues().size(), is(1));
+        assertThat(captor.getAllValues().size()).isEqualTo(1);
 
-        assertThat(captor.getValue().getQuery(), is(query));
-        assertThat(captor.getValue().getVariables(), is(variables));
-        assertThat(captor.getValue().getOperationName(), is(operationName));
+        assertThat(captor.getValue().getQuery()).isEqualTo(query);
+        assertThat(captor.getValue().getVariables()).isEqualTo(variables);
+        assertThat(captor.getValue().getOperationName()).isEqualTo(operationName);
     }
 
     @Test
-    public void testSimplePostRequest() throws Exception {
+    public void testSimplePostRequest() {
         Map<String, Object> request = new LinkedHashMap<>();
         String query = "{foo}";
         request.put("query", query);
@@ -94,15 +94,15 @@ public class GraphQLControllerTest {
         client.post().uri("/graphql")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(request), Map.class)
-                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("data").isEqualTo("bar");
 
-        assertThat(captor.getAllValues().size(), is(1));
+        assertThat(captor.getAllValues().size()).isEqualTo(1);
 
-        assertThat(captor.getValue().getQuery(), is(query));
+        assertThat(captor.getValue().getQuery()).isEqualTo(query);
     }
 
     @Test
@@ -123,19 +123,19 @@ public class GraphQLControllerTest {
                 .queryParam("query", "{query}")
                 .queryParam("operationName", "{operationName}")
                 .build(variablesJson, query, operationName))
-                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("data").isEqualTo("bar");
 
-        assertThat(captor.getAllValues().size(), is(1));
+        assertThat(captor.getAllValues().size()).isEqualTo(1);
 
         Map<String, Object> variables = new LinkedHashMap<>();
         variables.put("variable", "variableValue");
-        assertThat(captor.getValue().getQuery(), is(query));
-        assertThat(captor.getValue().getVariables(), is(variables));
-        assertThat(captor.getValue().getOperationName(), is(operationName));
+        assertThat(captor.getValue().getQuery()).isEqualTo(query);
+        assertThat(captor.getValue().getVariables()).isEqualTo(variables);
+        assertThat(captor.getValue().getOperationName()).isEqualTo(operationName);
     }
 
     @Test
@@ -152,16 +152,16 @@ public class GraphQLControllerTest {
         client.post().uri(uriBuilder -> uriBuilder.path("/graphql")
                 .queryParam("query", "{query}")
                 .build(query))
-                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("data").isEqualTo("bar");
 
 
-        assertThat(captor.getAllValues().size(), is(1));
+        assertThat(captor.getAllValues().size()).isEqualTo(1);
 
-        assertThat(captor.getValue().getQuery(), is(query));
+        assertThat(captor.getValue().getQuery()).isEqualTo(query);
     }
 
     @Test
@@ -178,15 +178,15 @@ public class GraphQLControllerTest {
         client.post().uri("/graphql")
                 .contentType(new MediaType("application", "graphql"))
                 .body(Mono.just(query), String.class)
-                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("data").isEqualTo("bar");
 
-        assertThat(captor.getAllValues().size(), is(1));
+        assertThat(captor.getAllValues().size()).isEqualTo(1);
 
-        assertThat(captor.getValue().getQuery(), is(query));
+        assertThat(captor.getValue().getQuery()).isEqualTo(query);
     }
 
     @Test
@@ -207,19 +207,20 @@ public class GraphQLControllerTest {
                 .queryParam("query", "{query}")
                 .queryParam("operationName", "{operationName}")
                 .build(variablesJson, query, operationName))
-                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("data").isEqualTo("bar");
 
-        assertThat(captor.getAllValues().size(), is(1));
+        assertThat(captor.getAllValues().size()).isEqualTo(1);
 
         Map<String, Object> variables = new LinkedHashMap<>();
         variables.put("variable", "variableValue");
-        assertThat(captor.getValue().getQuery(), is(query));
-        assertThat(captor.getValue().getVariables(), is(variables));
-        assertThat(captor.getValue().getOperationName(), is(operationName));
+
+        assertThat(captor.getValue().getQuery()).isEqualTo(query);
+        assertThat(captor.getValue().getVariables()).isEqualTo(variables);
+        assertThat(captor.getValue().getOperationName()).isEqualTo(operationName);
     }
 
     @Test
@@ -236,14 +237,15 @@ public class GraphQLControllerTest {
         client.get().uri(uriBuilder -> uriBuilder.path("/graphql")
                 .queryParam("query", "{query}")
                 .build(query))
-                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("data").isEqualTo("bar");
 
-        assertThat(captor.getAllValues().size(), is(1));
-        assertThat(captor.getValue().getQuery(), is(query));
+        assertThat(captor.getAllValues().size()).isEqualTo(1);
+
+        assertThat(captor.getValue().getQuery()).isEqualTo(query);
     }
 
 }

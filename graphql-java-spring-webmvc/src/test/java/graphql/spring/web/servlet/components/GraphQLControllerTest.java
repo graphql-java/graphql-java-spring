@@ -5,15 +5,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import graphql.ExecutionInput;
 import graphql.ExecutionResultImpl;
 import graphql.GraphQL;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -25,8 +26,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -36,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {TestAppConfig.class})
 @WebAppConfiguration
 public class GraphQLControllerTest {
@@ -52,8 +53,8 @@ public class GraphQLControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    @Before
-    public void setup() throws Exception {
+    @BeforeEach
+    public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
     }
 
@@ -93,15 +94,15 @@ public class GraphQLControllerTest {
 
         this.mockMvc.perform(asyncDispatch(mvcResult))
                 .andDo(print()).andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("data", is("bar")))
                 .andReturn();
 
-        assertThat(captor.getAllValues().size(), is(1));
+        assertThat(captor.getAllValues().size()).isEqualTo(1);
 
-        assertThat(captor.getValue().getQuery(), is(query));
-        assertThat(captor.getValue().getVariables(), is(variables));
-        assertThat(captor.getValue().getOperationName(), is(operationName));
+        assertThat(captor.getValue().getQuery()).isEqualTo(query);
+        assertThat(captor.getValue().getVariables()).isEqualTo(variables);
+        assertThat(captor.getValue().getOperationName()).isEqualTo(operationName);
 
     }
 
@@ -128,13 +129,13 @@ public class GraphQLControllerTest {
 
         this.mockMvc.perform(asyncDispatch(mvcResult))
                 .andDo(print()).andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("data", is("bar")))
                 .andReturn();
 
-        assertThat(captor.getAllValues().size(), is(1));
+        assertThat(captor.getAllValues().size()).isEqualTo(1);
 
-        assertThat(captor.getValue().getQuery(), is(query));
+        assertThat(captor.getValue().getQuery()).isEqualTo(query);
 
     }
 
@@ -162,17 +163,17 @@ public class GraphQLControllerTest {
 
         this.mockMvc.perform(asyncDispatch(mvcResult))
                 .andDo(print()).andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("data", is("bar")))
                 .andReturn();
 
-        assertThat(captor.getAllValues().size(), is(1));
+        assertThat(captor.getAllValues().size()).isEqualTo(1);
 
         Map<String, Object> variables = new LinkedHashMap<>();
         variables.put("variable", "variableValue");
-        assertThat(captor.getValue().getQuery(), is(query));
-        assertThat(captor.getValue().getVariables(), is(variables));
-        assertThat(captor.getValue().getOperationName(), is(operationName));
+        assertThat(captor.getValue().getQuery()).isEqualTo(query);
+        assertThat(captor.getValue().getVariables()).isEqualTo(variables);
+        assertThat(captor.getValue().getOperationName()).isEqualTo(operationName);
 
     }
 
@@ -198,13 +199,13 @@ public class GraphQLControllerTest {
 
         this.mockMvc.perform(asyncDispatch(mvcResult))
                 .andDo(print()).andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("data", is("bar")))
                 .andReturn();
 
-        assertThat(captor.getAllValues().size(), is(1));
+        assertThat(captor.getAllValues().size()).isEqualTo(1);
 
-        assertThat(captor.getValue().getQuery(), is(query));
+        assertThat(captor.getValue().getQuery()).isEqualTo(query);
 
     }
 
@@ -229,13 +230,13 @@ public class GraphQLControllerTest {
 
         this.mockMvc.perform(asyncDispatch(mvcResult))
                 .andDo(print()).andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("data", is("bar")))
                 .andReturn();
 
-        assertThat(captor.getAllValues().size(), is(1));
+        assertThat(captor.getAllValues().size()).isEqualTo(1);
 
-        assertThat(captor.getValue().getQuery(), is(query));
+        assertThat(captor.getValue().getQuery()).isEqualTo(query);
 
     }
 
@@ -263,17 +264,17 @@ public class GraphQLControllerTest {
 
         this.mockMvc.perform(asyncDispatch(mvcResult))
                 .andDo(print()).andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("data", is("bar")))
                 .andReturn();
 
-        assertThat(captor.getAllValues().size(), is(1));
+        assertThat(captor.getAllValues().size()).isEqualTo(1);
 
         Map<String, Object> variables = new LinkedHashMap<>();
         variables.put("variable", "variableValue");
-        assertThat(captor.getValue().getQuery(), is(query));
-        assertThat(captor.getValue().getVariables(), is(variables));
-        assertThat(captor.getValue().getOperationName(), is(operationName));
+        assertThat(captor.getValue().getQuery()).isEqualTo(query);
+        assertThat(captor.getValue().getVariables()).isEqualTo(variables);
+        assertThat(captor.getValue().getOperationName()).isEqualTo(operationName);
 
     }
 
@@ -297,14 +298,13 @@ public class GraphQLControllerTest {
 
         this.mockMvc.perform(asyncDispatch(mvcResult))
                 .andDo(print()).andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("data", is("bar")))
                 .andReturn();
 
-        assertThat(captor.getAllValues().size(), is(1));
+        assertThat(captor.getAllValues().size()).isEqualTo(1);
 
-        assertThat(captor.getValue().getQuery(), is(query));
-
+        assertThat(captor.getValue().getQuery()).isEqualTo(query);
     }
 
 }

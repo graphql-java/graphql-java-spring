@@ -3,16 +3,17 @@ package graphql.spring.web.reactive.components;
 import graphql.ExecutionInput;
 import graphql.ExecutionResultImpl;
 import graphql.GraphQL;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
@@ -22,10 +23,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
-@RunWith(SpringRunner.class)
+
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {DifferentUrlTestAppConfig.class})
 @WebAppConfiguration
 public class DifferentUrlGraphQLControllerTest {
@@ -38,7 +39,7 @@ public class DifferentUrlGraphQLControllerTest {
 
     private WebTestClient client;
 
-    @Before
+    @BeforeEach
     public void setup() {
         client = WebTestClient.bindToApplicationContext(applicationContext).build();
     }
@@ -60,15 +61,14 @@ public class DifferentUrlGraphQLControllerTest {
         client.post().uri("/otherUrl")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(request), Map.class)
-                .accept(MediaType.APPLICATION_JSON_UTF8)
+                .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("data").isEqualTo("bar");
 
-        assertThat(captor.getAllValues().size(), is(1));
-
-        assertThat(captor.getValue().getQuery(), is(query));
+        assertThat(captor.getAllValues().size()).isEqualTo(1);
+        assertThat(captor.getValue().getQuery()).isEqualTo(query);
     }
 
 }
