@@ -4,6 +4,7 @@ dependencies {
     compile "org.springframework:spring-webflux:$springVersion"
     compile "org.springframework:spring-context:$springVersion"
     compile "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
+    compile "javax.annotation:javax.annotation-api:${javaxAnnotation}"
     compile "com.graphql-java:graphql-java:$graphqlJavaVersion"
 
     testCompile("org.assertj:assertj-core:$assertJVersion")
