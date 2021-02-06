@@ -109,13 +109,21 @@ The following properties are currently available:
 
 ### Beans
 
-The following Beans can be overridden by providing a different implementation. 
+Several Beans can be overriden by providing a different implementation. They are in the `graphql.spring.web.reactive.components` or `graphql.spring.web.servlet.components` package, depending on whether you choose the `spring-webflux` or the `spring-webmvc` depedency.
+
+Amongs them are:
 
 | Interface | Description | 
 | --- | --- | 
 | GraphQLInvocation | Executes one request. The default impl just calls the provided `GraphQL` bean.|
 | ExecutionResultHandler | Takes a `ExecutionResult` and sends the result back to the client. The default impl returns `ExecutionResult.toSpecification()` as json. |
 
+### DataLoader
 
+The _DefaultGraphQLInvocation_ bean looks for these beans:
 
+* if an `OnDemandDataLoaderRegistry` Spring Bean is found, then its `getNewDataLoaderRegistry()` method is called for each request invocation. This allows to have one `DataLoderRegistry` per request, and so, a _per request_ cache.
 
+* else, if a `DataLoderRegistry` Spring Bean is found, then it is used for every requests. Its up to this bean to properly defined the caching strategy.
+
+* else no DataLoader is used.
