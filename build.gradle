@@ -40,8 +40,7 @@ nexusPublishing {
         }
     }
 }
-
-
+group = 'com.graphql-java'
 
 subprojects {
 
@@ -51,14 +50,12 @@ subprojects {
     apply plugin: 'maven-publish'
     apply plugin: 'groovy'
     apply plugin: 'signing'
-//    apply plugin: "io.github.gradle-nexus.publish-plugin"
 
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
     def releaseVersion = System.env.RELEASE_VERSION
     version = releaseVersion ? releaseVersion : getDevelopmentVersion()
-    group = 'com.graphql-java'
 
     ext {
         graphqlJavaVersion = "15.0"
