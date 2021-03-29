@@ -40,6 +40,8 @@ nexusPublishing {
         }
     }
 }
+def releaseVersion = System.env.RELEASE_VERSION
+version = releaseVersion ? releaseVersion : getDevelopmentVersion()
 group = 'com.graphql-java'
 
 subprojects {
@@ -54,8 +56,6 @@ subprojects {
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
-    def releaseVersion = System.env.RELEASE_VERSION
-    version = releaseVersion ? releaseVersion : getDevelopmentVersion()
 
     ext {
         graphqlJavaVersion = "15.0"
