@@ -57,6 +57,7 @@ subprojects {
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
     version = releaseVersion ? releaseVersion : getDevelopmentVersion()
+    group = 'com.graphql-java'
 
     ext {
         graphqlJavaVersion = "15.0"
