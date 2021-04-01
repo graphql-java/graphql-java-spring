@@ -3,3 +3,10 @@ build
 .idea/
 out
 *.iml
+
+
+# eclipse files 
+.project
+.classpath
+.settings/
+bin/
